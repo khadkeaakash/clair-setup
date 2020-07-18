@@ -33,10 +33,10 @@ pipeline {
                                         docker run --rm --name postgresdb -e POSTGRES_PASSWORD=chaklee -d postgres || true
                                         sleep 5
                                         docker run --rm --link postgresdb:postgres postgres sh -c 'echo "create database clairtest" | PGPASSWORD=chaklee psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres' ||true
-                                        curfold=$(pwd)
+                                        #curfold=$(pwd)
                                         cd $HOME
-                                        mkdir core
-                                        cd core
+                                        mkdir core || true
+                                        cd core ||true
                                         mkdir .docker ||true
                                         rm -rf config.json ||true
                                         cat << 'EOF' >> config.json
