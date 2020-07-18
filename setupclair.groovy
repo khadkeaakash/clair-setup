@@ -14,9 +14,8 @@ pipeline {
                 sh '''
                 docker pull postgres:latest
                 #export PGPASSWORD='chaklee'
-                docker container stop $(docker container ls –aq)
-                docker container rm $(docker container ls –aq)
-                docker container stop $(docker container ls –aq) && docker system prune –af ––volum
+                docker container prune -f -a
+                sleep 3
                 docker run --rm --name postgres -d postgres || true
                 sleep 20
                 docker run --rm --link postgres:postgres postgres sh -c 'echo "create database clairtest" | psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres'
