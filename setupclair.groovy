@@ -8,7 +8,7 @@ pipeline {
                 sh '''
                 docker pull postgres:latest
                 docker run --name postgres -e POSTGRES_PASSWORD=chaklee -d postgres || true
-                docker run --rm --link postgres:postgres postgres sh -c 'echo "create database clairtest" | psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "chaklee" -U postgres'
+                docker run --rm --link postgres:postgres postgres sh -c 'echo "create database clairtest" | psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres -e POSTGRES_PASSWORD=chaklee'                             
                 '''
             } //end of steps
         } //end of stage build
