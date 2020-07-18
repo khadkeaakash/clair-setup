@@ -18,10 +18,18 @@ pipeline {
                 docker container rm postgresdb || true
                 docker container stop postgresdb || true
                 docker container rm postgresdb || true
+                docker container stop quayredisd || true
+                docker container rm quayredisd || true
                 sleep 3
                 docker run --rm --name postgresdb -e POSTGRES_PASSWORD=chaklee -d postgres || true
                 sleep 5
                 docker run --rm --link postgresdb:postgres postgres sh -c 'echo "create database clairtest" | PGPASSWORD=chaklee psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres' ||true
+                
+                docker login -u="redhat+quay" -p="" quay.io
+                
+                docker pull quay.io/quay/redis
+                docker run --rm --name quayredisdb -d -p 6379:6379 quay.io/quay/redis
+
                 docker pull quay.io/coreos/clair-jwt:v2.0.0
                 mkdir clair-config || true
                 cd clair-config ||true
