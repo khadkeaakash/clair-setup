@@ -21,7 +21,7 @@ pipeline {
                 sleep 3
                 docker run --rm --name postgresdb -e POSTGRES_PASSWORD=chaklee -d postgres || true
                 sleep 5
-                docker run --rm --link postgresdb:postgres postgres sh -c 'echo "create database clairtest: $POSTGRES_PORT_5432_TCP_ADDR" | PGPASSWORD=chaklee psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres' ||true
+                docker run --rm --link postgresdb:postgres postgres sh -c 'echo "create database clairtest" | PGPASSWORD=chaklee psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres' ||true
                 docker pull quay.io/coreos/clair-jwt:v2.0.0
                 mkdir clair-config || true
                 cd clair-config ||true
@@ -32,7 +32,7 @@ clair:
     options:
       # A PostgreSQL Connection string pointing to the Clair Postgres database.
       # Documentation on the format can be found at: http://www.postgresql.org/docs/9.4/static/libpq-connect.html
-      source: postgresql://postgres@$POSTGRES_PORT_5432_TCP_ADDR:5432/clairtest?sslmode=disable
+      source: postgresql://postgres@172.17.0.2:5432/clairtest?sslmode=disable
       cachesize: 16384
   api:
     # The port at which Clair will report its health status. For example, if Clair is running at
