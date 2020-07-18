@@ -14,8 +14,8 @@ pipeline {
                 sh '''
                 docker pull postgres:latest
                 #export PGPASSWORD='chaklee'
-                docker container stop postgresdb
-                docker container rm postgresdb
+                docker container stop postgresdb || true
+                docker container rm postgresdb || true
                 sleep 3
                 docker run --rm --name postgresdb -e POSTGRES_PASSWORD=chaklee -d postgres || true
                 sleep 5
