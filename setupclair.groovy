@@ -35,6 +35,8 @@ pipeline {
                                         docker run --rm --link postgresdb:postgres postgres sh -c 'echo "create database clairtest" | PGPASSWORD=chaklee psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres' ||true
                                         curfold=$(pwd)
                                         cd $HOME
+                                        mkdir core
+                                        cd core
                                         mkdir .docker ||true
                                         rm -rf config.json ||true
                                         cat << 'EOF' >> config.json
@@ -51,9 +53,11 @@ EOF
                                         cat config.json
                                         cd $WORKSPACE
                                         
-                                        #docker login -u "coreos+rhcp" -p ${redhat-quay-token} quay.io
+                                        
                                         docker pull quay.io/quay/redis
                                         docker run --rm --name quayredisdb -d -p 6379:6379 quay.io/quay/redis
+                                        
+                                        docker login -u "coreos+rhcp" -p ${redhat-quay-token} quay.io
                                         docker pull quay.io/coreos/quay:v2.9.3
                                         mkdir storage
                                         mkdir config
