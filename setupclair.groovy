@@ -25,8 +25,8 @@ pipeline {
                                         docker container rm claire || true
                                         docker container stop postgresdb || true
                                         docker container rm postgresdb || true
-                                        docker container stop quayredisd || true
-                                        docker container rm quayredisd || true
+                                        docker container stop quayredisdb || true
+                                        docker container rm quayredisdb || true
                                         docker container stop quaycore || true
                                         docker container rm quaycore || true
                                         sleep 3
