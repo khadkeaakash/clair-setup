@@ -14,6 +14,8 @@ pipeline {
                 sh '''
                 docker pull postgres:latest
                 #export PGPASSWORD='chaklee'
+                docker container stop claire || true
+                docker container rm postgresdb || true
                 docker container stop postgresdb || true
                 docker container rm postgresdb || true
                 sleep 3
@@ -30,7 +32,7 @@ clair:
     options:
       # A PostgreSQL Connection string pointing to the Clair Postgres database.
       # Documentation on the format can be found at: http://www.postgresql.org/docs/9.4/static/libpq-connect.html
-      source: { POSTGRES_CONNECTION_STRING }
+      source: postgresql://postgres@$POSTGRES_PORT_5432_TCP_ADDR:5432/clairtest?sslmode=disable
       cachesize: 16384
   api:
     # The port at which Clair will report its health status. For example, if Clair is running at
@@ -107,7 +109,7 @@ EOF
 
         cat config.yaml
         
-        docker run --restart=always -p 6060:6060 -p 6061:6061 -v $(pwd):/config quay.io/coreos/clair-jwt:v2.0.0
+        docker run --restart=always --name=claire -p 6060:6060 -p 6061:6061 -v $(pwd):/config quay.io/coreos/clair-jwt:v2.0.0
                 '''
             } //end of steps
         } //end of stage build
