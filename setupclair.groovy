@@ -14,14 +14,15 @@ pipeline {
                 sh '''
                 docker pull postgres:latest
                 #export PGPASSWORD='chaklee'
-                docker system prune -f
+                docker container stop postgresdb
+                docker container rm postgresdb
                 sleep 3
                 docker run --rm --name postgresdb -e POSTGRES_PASSWORD=chaklee -d postgres || true
                 sleep 5
-                docker run --rm --link postgresdb:postgres postgres sh -c 'echo "create database clairtest" | PGPASSWORD=chaklee psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres'
+                docker run --rm --link postgresdb:postgres postgres sh -c 'echo "create database clairtest" | PGPASSWORD=chaklee psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres' ||true
                 docker pull quay.io/coreos/clair-jwt:v2.0.0
-                mkdir clair-config
-                cd clair-config
+                mkdir clair-config || true
+                cd clair-config ||true
                 cat << 'EOF' >> config.yaml
 clair:
   database:
