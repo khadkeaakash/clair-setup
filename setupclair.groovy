@@ -11,7 +11,10 @@ pipeline {
     stages {
         stage('claire setup') {
             steps {
-                    withCredentials ([string(credentialsId: 'redhat-quay-token', variable: 'redhat-quay-token)])
+                    withCredentials ([
+                                        string(credentialsId: 'redhat-quay-token', variable: 'redhat-quay-token'),
+                                        string(credentialsId: 'quay-auth-token', variable: 'quay-auth-token')     
+                                    ])
                     {
                             
                     script {
@@ -24,15 +27,37 @@ pipeline {
                                         docker container rm postgresdb || true
                                         docker container stop quayredisd || true
                                         docker container rm quayredisd || true
+                                        docker container stop quaycore || true
+                                        docker container rm quaycore || true
                                         sleep 3
                                         docker run --rm --name postgresdb -e POSTGRES_PASSWORD=chaklee -d postgres || true
                                         sleep 5
                                         docker run --rm --link postgresdb:postgres postgres sh -c 'echo "create database clairtest" | PGPASSWORD=chaklee psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres' ||true
+                                        curfold=$(pwd)
+                                        cd $HOME
+                                        mkdir .docker ||true
+                                        cat << 'EOF' >> config.json
+{
+  "auths":{
+    "quay.io": {
+        "auth": "${quay-auth-token}",
+        "email": ""
+    }
+  }
+}
+EOF
 
+                                        cd $WORKSPACE
+                                        
                                         docker login -u="redhat+quay" -p="${redhat-quay-token}" quay.io
-
                                         docker pull quay.io/quay/redis
                                         docker run --rm --name quayredisdb -d -p 6379:6379 quay.io/quay/redis
+                                        docker pull quay.io/coreos/quay:v2.9.3
+                                        mkdir storage
+                                        mkdir config
+                                        docker run --restart=always --name quaycore -p 443:443 -p 80:80 --privileged=true -v ./config:/conf/stack -v ./storage:/datastorage -d quay.io/coreos/quay:v2.9.3
+
+                                        
 
                                         docker pull quay.io/coreos/clair-jwt:v2.0.0
                                         mkdir clair-config || true
