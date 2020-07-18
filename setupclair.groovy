@@ -21,7 +21,7 @@ pipeline {
                 sleep 3
                 docker run --rm --name postgresdb -e POSTGRES_PASSWORD=chaklee -d postgres || true
                 sleep 5
-                docker run --rm --link postgresdb:postgres postgres sh -c 'echo "create database clairtest" | PGPASSWORD=chaklee psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres' ||true
+                docker run --rm --link postgresdb:postgres postgres sh -c 'echo "create database clairtest: $POSTGRES_PORT_5432_TCP_ADDR" | PGPASSWORD=chaklee psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres' ||true
                 docker pull quay.io/coreos/clair-jwt:v2.0.0
                 mkdir clair-config || true
                 cd clair-config ||true
@@ -107,9 +107,9 @@ jwtproxy:
           registry: { QUAY_ENDPOINT }/keys/
 EOF
 
-        cat config.yaml
+        #cat config.yaml
         
-        docker run --restart=always --name=claire -p 6060:6060 -p 6061:6061 -v $(pwd):/config quay.io/coreos/clair-jwt:v2.0.0
+        #docker run --restart=always --name=claire -p 6060:6060 -p 6061:6061 -v $(pwd):/config quay.io/coreos/clair-jwt:v2.0.0
                 '''
             } //end of steps
         } //end of stage build
