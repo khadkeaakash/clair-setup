@@ -51,7 +51,7 @@ EOF
                                         cat config.json
                                         cd $WORKSPACE
                                         
-                                        docker login -u "coreos+rhcp" -p ${redhat-quay-token} quay.io
+                                        #docker login -u "coreos+rhcp" -p ${redhat-quay-token} quay.io
                                         docker pull quay.io/quay/redis
                                         docker run --rm --name quayredisdb -d -p 6379:6379 quay.io/quay/redis
                                         docker pull quay.io/coreos/quay:v2.9.3
