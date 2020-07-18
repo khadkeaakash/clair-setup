@@ -22,7 +22,7 @@ pipeline {
                 docker pull quay.io/coreos/clair-jwt:v2.0.0
                 mkdir clair-config
                 cd clair-config
-                cat >config.yaml <<EOF
+                cat << 'EOF' >> config.yaml
 clair:
   database:
     type: pgsql
@@ -102,7 +102,8 @@ jwtproxy:
           # QUAY_ENDPOINT defines the endpoint at which Quay Enterprise is running.
           # Example: https://myregistry.mycompany.com
           registry: { QUAY_ENDPOINT }/keys/
- EOF
+EOF
+
         cat config.yaml
                 '''
             } //end of steps
