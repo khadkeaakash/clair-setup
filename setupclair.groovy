@@ -22,7 +22,7 @@ pipeline {
                                         docker pull postgres:latest
                                         #export PGPASSWORD='chaklee'
                                         docker container stop claire || true
-                                        docker container rm postgresdb || true
+                                        docker container rm claire || true
                                         docker container stop postgresdb || true
                                         docker container rm postgresdb || true
                                         docker container stop quayredisd || true
@@ -36,6 +36,7 @@ pipeline {
                                         curfold=$(pwd)
                                         cd $HOME
                                         mkdir .docker ||true
+                                        rm -rf config.json ||true
                                         cat << 'EOF' >> config.json
 {
   "auths":{
