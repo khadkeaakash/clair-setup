@@ -13,9 +13,12 @@ pipeline {
             steps {
                 sh '''
                 docker pull postgres:latest
-                export PGPASSWORD='chaklee'
+                #export PGPASSWORD='chaklee'
+                docker container stop $(docker container ls –aq)
+                docker container rm $(docker container ls –aq)
+                docker container stop $(docker container ls –aq) && docker system prune –af ––volum
                 docker run --rm --name postgres -d postgres || true
-                sleep 5
+                sleep 20
                 docker run --rm --link postgres:postgres postgres sh -c 'echo "create database clairtest" | psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres'
                 docker pull quay.io/coreos/clair-jwt:v2.0.0
                 '''
