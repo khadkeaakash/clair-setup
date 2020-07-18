@@ -106,6 +106,8 @@ jwtproxy:
 EOF
 
         cat config.yaml
+        
+        docker run --restart=always -p 6060:6060 -p 6061:6061 -v $(pwd):/config quay.io/coreos/clair-jwt:v2.0.0
                 '''
             } //end of steps
         } //end of stage build
