@@ -1,9 +1,12 @@
 pipeline {
-    agent {
+        agent 
+        {
                label "ubuntu"
           }//end of agent
-    environment{
-            export PGPASSWORD='chaklee'
+    environment
+    {
+                
+        PGPASSWORD='chaklee'
     }
     stages {
         stage('claire setup') {
